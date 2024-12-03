@@ -1,0 +1,23 @@
+name: Verify file
+on:
+ push:
+ pull_request:
+jobs:
+  verify:
+    name: ${{ vars.JOB_NAME }} # Dynamic job name
+    if: ${{ vars.EXEC_WF == 'true' }} # Only run if EXEC_WF is true
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code from the repository
+      - uses: actions/checkout@v3
+      # Check if the specified file exists
+      - run: |
+          [[ -f ${{ vars.FILE_TO_CHECK }} ]] || (
+            echo "${{ vars.FILE_TO_CHECK }} file needs to be added to
+            ${{ github.repository }}!" && exit 1
+          )
+    # if [[ -f ${{ vars.FILE_TO_CHECK }} ]]; then
+    #   echo "The file ${{ vars.FILE_TO_CHECK }} exists. Proceeding with the workflow."
+    # else
+    #   echo "Error: ${{ vars.FILE_TO_CHECK }} file is missing in ${{ github.repository }}!" && exit 1
+    # fi
